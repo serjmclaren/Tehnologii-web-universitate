@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literele Alfabetului Latin Lipsă din Text</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .problem {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #8e2de2;
+        }
+
+        .problem h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .problem p {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .input-section {
+            margin: 30px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #8e2de2;
+            outline: none;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        button {
+            flex: 1;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(142, 45, 226, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-btn {
+            background: linear-gradient(to right, #95a5a6, #7f8c8d);
+        }
+
+        .results {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .results h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .statistics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-card {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #8e2de2;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .letters-container {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .letters-container h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .alphabet-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .letters-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+
+        .letter-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+
+        .present {
+            background-color: #d1f7c4;
+            color: #27ae60;
+            border: 2px solid #2ecc71;
+            box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+        }
+
+        .absent {
+            background-color: #ffd6d6;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            box-shadow: 0 4px 6px rgba(231, 76, 60, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .present-legend {
+            background-color: #d1f7c4;
+            border: 2px solid #2ecc71;
+        }
+
+        .absent-legend {
+            background-color: #ffd6d6;
+            border: 2px solid #e74c3c;
+        }
+
+        .text-preview {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .highlight {
+            background-color: rgba(142, 45, 226, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .empty-state h3 {
+            color: #888;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Literele Alfabetului Latin Lipsă din Text</h1>
+        
+        <p class="description">
+            Introduceți un text și descoperiți care litere ale alfabetului latin <strong>nu apar</strong> în acel text.
+        </p>
+        
+        <div class="problem">
+            <h3>Enunțul problemei:</h3>
+            <p>
+                Se dă un text. Să se afișeze literele alfabetului latin care nu apar în acest text.
+                Alfabetul latin conține 26 de litere: de la A la Z.
+            </p>
+        </div>
+        
+        <div class="input-section">
+            <label for="text-input">Introduceți textul:</label>
+            <textarea id="text-input" placeholder="Scrieți sau lipiți textul aici..."></textarea>
+            <p class="hint">Textul va fi analizat indiferent de majuscule/minuscule (A = a).</p>
+        </div>
+        
+        <div class="buttons">
+            <button onclick="analizeazaText()">Analizează Textul</button>
+            <button onclick="genereazaTextExemplu()" class="secondary-btn">Text Exemplu</button>
+            <button onclick="resetare()" class="secondary-btn">Resetare</button>
+        </div>
+        
+        <div id="rezultate" class="results">
+            <h2>Rezultate Analiză</h2>
+            
+            <div class="statistics">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-litere">26</div>
+                    <div class="stat-label">Total litere alfabet</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="litere-prezente">0</div>
+                    <div class="stat-label">Litere prezente în text</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="litere-lipsa">0</div>
+                    <div class="stat-label">Litere lipsă din text</div>
+                </div>
+            </div>
+            
+            <div id="text-preview-container">
+                <!-- Aici va apărea preview-ul textului când e introdus -->
+            </div>
+            
+            <div id="letters-container-content">
+                <!-- Aici va apărea conținutul cu literele când e analizat textul -->
+            </div>
+            
+            <div id="list-container">
+                <!-- Aici va apărea lista literelor lipsă când e analizat textul -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            Analiză text folosind metode de manipulare a șirurilor de caractere în JavaScript
+        </div>
+    </div>
+
+    <script>
+
+        const alfabetLatin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        
+        function analizeazaText() {
+
+            const textInput = document.getElementById('text-input').value.trim();
+            const rezultateDiv = document.getElementById('rezultate');
+            const textPreviewContainer = document.getElementById('text-preview-container');
+            const lettersContainer = document.getElementById('letters-container-content');
+            const listContainer = document.getElementById('list-container');
+
+            if (!textInput) {
+
+                textPreviewContainer.innerHTML = '';
+                lettersContainer.innerHTML = '';
+                listContainer.innerHTML = '';
+    
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <h3>Încă nu a fost analizat niciun text</h3>
+                    <p>Introduceți un text în caseta de mai sus și apăsați "Analizează Textul" pentru a vedea rezultatele.</p>
+                `;
+                rezultateDiv.appendChild(emptyState);
+                rezultateDiv.style.display = 'block';
+                return;
+            }
+
+            textPreviewContainer.innerHTML = '';
+            lettersContainer.innerHTML = '';
+            listContainer.innerHTML = '';
+   
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'text-preview';
+            
+            if (textInput.length > 300) {
+                previewDiv.innerHTML = `<strong>Text analizat (primele 300 de caractere):</strong><br>${textInput.substring(0, 300)}...`;
+            } else {
+                previewDiv.innerHTML = `<strong>Text analizat:</strong><br>${textInput}`;
+            }
+            
+            textPreviewContainer.appendChild(previewDiv);
+
+            let litereApar = new Array(26).fill(false);
+
+            for (let i = 0; i < textInput.length; i++) {
+                const caracter = textInput.charAt(i).toUpperCase();
+        
+                const index = alfabetLatin.indexOf(caracter);
+                if (index !== -1) {
+                    litereApar[index] = true;
+                }
+            }
+  
+            const literePrezente = litereApar.filter(x => x).length;
+            const litereLipsa = 26 - literePrezente;
+
+            document.getElementById('total-litere').textContent = '26';
+            document.getElementById('litere-prezente').textContent = literePrezente;
+            document.getElementById('litere-lipsa').textContent = litereLipsa;
+
+            const lettersContainerDiv = document.createElement('div');
+            lettersContainerDiv.className = 'letters-container';
+            lettersContainerDiv.innerHTML = '<h3>Alfabetul Latin</h3>';
+
+            const prezenteSection = document.createElement('div');
+            prezenteSection.className = 'alphabet-section';
+            prezenteSection.innerHTML = '<div class="section-title">Literele care <span class="highlight">APAR</span> în text (verde):</div>';
+            
+            const prezenteGrid = document.createElement('div');
+            prezenteGrid.className = 'letters-grid';
+            prezenteGrid.id = 'litere-prezentate';
+
+            const lipsaSection = document.createElement('div');
+            lipsaSection.className = 'alphabet-section';
+            lipsaSection.innerHTML = '<div class="section-title">Literele care <span class="highlight">NU APAR</span> în text (roșu):</div>';
+            
+            const lipsaGrid = document.createElement('div');
+            lipsaGrid.className = 'letters-grid';
+            lipsaGrid.id = 'litere-lipsa-grid';
+        
+            let listaTextLitereLipsa = [];
+   
+            for (let i = 0; i < alfabetLatin.length; i++) {
+                const litera = alfabetLatin.charAt(i);
+                const apare = litereApar[i];
+                
+                const letterBox = document.createElement('div');
+                letterBox.className = 'letter-box';
+                letterBox.textContent = litera;
+                letterBox.title = `Litera ${litera} ${apare ? 'apare' : 'nu apare'} în text`;
+                
+                if (apare) {
+                    letterBox.classList.add('present');
+                    prezenteGrid.appendChild(letterBox);
+                } else {
+                    letterBox.classList.add('absent');
+                    lipsaGrid.appendChild(letterBox);
+                    listaTextLitereLipsa.push(litera);
+                }
+            }
+  
+            prezenteSection.appendChild(prezenteGrid);
+            lipsaSection.appendChild(lipsaGrid);
+
+            const legendDiv = document.createElement('div');
+            legendDiv.className = 'legend';
+            legendDiv.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color present-legend"></div>
+                    <span>Literă prezentă în text</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color absent-legend"></div>
+                    <span>Literă absentă din text</span>
+                </div>
+            `;
+
+            lettersContainerDiv.appendChild(prezenteSection);
+            lettersContainerDiv.appendChild(lipsaSection);
+            lettersContainerDiv.appendChild(legendDiv);
+            
+            lettersContainer.appendChild(lettersContainerDiv);
+     
+            const listPreviewDiv = document.createElement('div');
+            listPreviewDiv.className = 'text-preview';
+            
+            if (listaTextLitereLipsa.length > 0) {
+                listPreviewDiv.innerHTML = `
+                    <strong>Lista literelor lipsă:</strong><br>
+                    ${listaTextLitereLipsa.join(', ')} 
+                    (${listaTextLitereLipsa.length} litere)
+                `;
+            } else {
+                listPreviewDiv.innerHTML = `
+                    <strong>Lista literelor lipsă:</strong><br>
+                    <span style="color: #27ae60; font-weight: bold;">
+                        Toate cele 26 de litere ale alfabetului latin apar în text!
+                    </span>
+                `;
+            }
+            
+            listContainer.appendChild(listPreviewDiv);
+
+            rezultateDiv.style.display = 'block';
+                  setTimeout(() => {
+                const letterBoxes = document.querySelectorAll('.letter-box');
+                letterBoxes.forEach((box, index) => {
+                    box.style.opacity = '0';
+                    box.style.transform = 'scale(0.8)';
+                    
+                    setTimeout(() => {
+                        box.style.transition = 'opacity 0.5s, transform 0.5s';
+                        box.style.opacity = '1';
+                        box.style.transform = 'scale(1)';
+                    }, index * 30);
+                });
+            }, 100);
+        }
+        
+        function genereazaTextExemplu() {
+            const exempleText = [
+                "În această zi minunată începem să muncim :)",
+                "Quick brown foxes jump over lazy dogs. This sentence contains all letters from A to Z, making it a perfect pangram for testing fonts and keyboards.",
+                "Salut! Cum te simți azi? Vremea este frumoasă și soarele strălucește puternic. Am văzut câțiva copii jucându-se în parc cu mingea lor colorată.",
+                "The five boxing wizards jump quickly. This is another English pangram that uses every letter of the alphabet at least once.",
+                "Programarea este arta de a comunica cu calculatorul pentru a rezolva probleme complexe prin algoritmi eficienți și structuri de date optimizate."
+            ];
+
+            const exempluAleatoriu = exempleText[Math.floor(Math.random() * exempleText.length)];
+            document.getElementById('text-input').value = exempluAleatoriu;
+
+            analizeazaText();
+        }
+        
+        function resetare() {
+            document.getElementById('text-input').value = '';
+            document.getElementById('rezultate').style.display = 'none';
+        }
+      
+        let timeoutId;
+        document.getElementById('text-input').addEventListener('input', function() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                if (this.value.trim().length > 0) {
+                    analizeazaText();
+                } else {
+                    // Dacă textul e gol, ascundem rezultatele
+                    document.getElementById('rezultate').style.display = 'none';
+                }
+            }, 800);
+        });
+    </script>
+</body>
+</html>

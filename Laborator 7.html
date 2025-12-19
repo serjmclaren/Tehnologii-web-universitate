@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detector Browser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            transition: background-color 1s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        
+        h1 { color: #333; margin-bottom: 20px; }
+        h2 { margin: 15px 0; }
+        p { color: #666; margin: 10px 0; }
+        
+        .firefox { background-color: #4CAF50; color: white; } /* Verde */
+        .chrome { background-color: #FFEB3B; } /* Galben */
+        .edge { background-color: #0078D7; color: white; } /* Albastru Edge */
+        .ie { background-color: #F44336; color: white; } /* Roșu */
+        .other { background-color: #00BCD4; color: white; } /* Cyan */
+        
+        .browser-name {
+            font-size: 2em;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body id="body">
+    <div class="result">
+        <h1>🌐 Detector Browser</h1>
+        <h2 id="browser-name">Se detectează...</h2>
+        <p id="browser-info">Versiune: Se verifică...</p>
+        <p id="user-agent"></p>
+        
+        <div class="browser-name" id="color-indicator">
+            Culoare aplicată
+        </div>
+        
+        <p><small>Pagina va schimba automat culoarea fundalului</small></p>
+    </div>
+
+    <script>
+        // Funcție simplă pentru detectarea browser-ului
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            let browserName = "Browser necunoscut";
+            let browserClass = "other";
+            
+            // Detecție corectă a browser-ului
+            if (userAgent.includes("Edg") || userAgent.includes("Edge")) {
+                browserName = "Microsoft Edge";
+                browserClass = "edge";
+            } 
+            else if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
+                browserName = "Google Chrome";
+                browserClass = "chrome";
+            } 
+            else if (userAgent.includes("Firefox")) {
+                browserName = "Mozilla Firefox";
+                browserClass = "firefox";
+            } 
+            else if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
+                browserName = "Internet Explorer";
+                browserClass = "ie";
+            } 
+            else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+                browserName = "Safari";
+                browserClass = "other"; // Cyan pentru Safari
+            } 
+            else if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
+                browserName = "Opera";
+                browserClass = "other"; // Cyan pentru Opera
+            }
+            
+            return { name: browserName, class: browserClass };
+        }
+        
+        // Funcție pentru extragerea versiunii
+        function getBrowserVersion() {
+            const ua = navigator.userAgent;
+            let version = "Necunoscută";
+            
+            // Pentru Chrome/Edge
+            const chromeMatch = ua.match(/(Chrome|Edg|Edge)\/(\d+\.\d+)/);
+            if (chromeMatch) {
+                version = chromeMatch[2];
+            }
+            // Pentru Firefox
+            else if (ua.includes("Firefox")) {
+                const firefoxMatch = ua.match(/Firefox\/(\d+\.\d+)/);
+                if (firefoxMatch) version = firefoxMatch[1];
+            }
+            // Pentru IE
+            else if (ua.includes("MSIE")) {
+                const ieMatch = ua.match(/MSIE (\d+\.\d+)/);
+                if (ieMatch) version = ieMatch[1];
+            }
+            else if (ua.includes("Trident")) {
+                const tridentMatch = ua.match(/rv:(\d+\.\d+)/);
+                if (tridentMatch) version = tridentMatch[1];
+            }
+            
+            return version;
+        }
+        
+        // Aplicarea culorilor
+        function applyColors(browser) {
+            const body = document.getElementById('body');
+            const indicator = document.getElementById('color-indicator');
+            
+            // Elimină clasele anterioare
+            body.className = '';
+            indicator.className = 'browser-name';
+            
+            // Adaugă clasa corespunzătoare
+            body.classList.add(browser.class);
+            indicator.classList.add(browser.class);
+            
+            // Setează textul indicatorului
+            if (browser.class === 'firefox') indicator.textContent = 'VERDE - Firefox';
+            else if (browser.class === 'chrome') indicator.textContent = 'GALBEN - Chrome';
+            else if (browser.class === 'edge') indicator.textContent = 'ALBASTRU - Edge';
+            else if (browser.class === 'ie') indicator.textContent = 'ROȘU - Internet Explorer';
+            else indicator.textContent = 'CYAN - Alt browser';
+        }
+        
+        // Inițializare
+        function init() {
+            const browser = detectBrowser();
+            const version = getBrowserVersion();
+            
+            // Actualizează informațiile
+            document.getElementById('browser-name').textContent = browser.name;
+            document.getElementById('browser-info').textContent = `Versiune: ${version}`;
+            document.getElementById('user-agent').textContent = `User Agent: ${navigator.userAgent.substring(0, 100)}...`;
+            
+            // Aplică culorile
+            applyColors(browser);
+            
+            // Log în consolă pentru debugging
+            console.log("Browser detectat:", browser.name);
+            console.log("Versiune:", version);
+            console.log("User Agent complet:", navigator.userAgent);
+        }
+        
+        // Rulează la încărcarea paginii
+        window.onload = init;
+    </script>
+</body>
+</html>
