@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hobby-ul meu - Fotbal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Animație mingi de fotbal - mai intensă */
+        .football {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,5a45,45 0 1,0 0,90a45,45 0 1,0 0,-90" fill="white"/><path d="M50,5l15,40l40,15l-40,15l-15,40l-15-40l-40-15l40-15z" fill="black"/></svg>') no-repeat center/contain;
+            opacity: 0.8;
+            z-index: 1;
+            animation: float 12s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translate(100px, -50px) rotate(90deg) scale(1.2);
+            }
+            50% {
+                transform: translate(200px, 0) rotate(180deg) scale(1);
+            }
+            75% {
+                transform: translate(100px, 50px) rotate(270deg) scale(0.8);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg) scale(1);
+            }
+        }
+        
+        /* Animație pentru mingi suplimentare */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+        
+        .football-bounce {
+            animation: bounce 3s infinite ease-in-out;
+        }
+        
+        header {
+            background: linear-gradient(to right, #005c97, #363795);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 5px solid #ffcc00;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+        }
+        
+        .content {
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        
+        section.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        h2 {
+            color: #005c97;
+            border-bottom: 2px solid #ffcc00;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .bold {
+            font-weight: bold;
+        }
+        
+        .italic {
+            font-style: italic;
+        }
+        
+        .highlight {
+            background-color: #ffcc00;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        ol, ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .football-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 5px solid #005c97;
+            transition: transform 0.3s ease;
+        }
+        
+        .football-img:hover {
+            transform: scale(1.02);
+        }
+        
+        .image-map {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        .hotspot {
+            position: absolute;
+            background-color: rgba(255, 204, 0, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #005c97;
+            font-weight: bold;
+        }
+        
+        .hotspot:hover {
+            background-color: rgba(255, 204, 0, 0.8);
+            transform: scale(1.2);
+        }
+        
+        .hotspot-info {
+            position: absolute;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: none;
+            width: 300px;
+            z-index: 10;
+            animation: popIn 0.3s ease-out;
+            border: 2px solid #005c97;
+        }
+        
+        .hotspot-info img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #005c97;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #e9f7fe;
+            transition: background-color 0.3s ease;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            margin: 25px 0;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-container {
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        form {
+            display: grid;
+            grid-gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #005c97;
+        }
+        
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #005c97;
+            box-shadow: 0 0 0 2px rgba(0, 92, 151, 0.2);
+            outline: none;
+        }
+        
+        button {
+            background: linear-gradient(to right, #005c97, #363795);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, #004275, #2a247a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #005c97;
+            color: white;
+            margin-top: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Popup overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease-out;
+            text-align: center;
+        }
+        
+        .popup-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .popup-content h3 {
+            color: #005c97;
+            margin-bottom: 10px;
+        }
+        
+        .popup-content p {
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive design improvements */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            section {
+                padding: 15px;
+            }
+            
+            .hotspot {
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 0.8rem;
+            }
+            
+            .hotspot-info {
+                width: 250px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .hotspot {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 0.7rem;
+            }
+            
+            .hotspot-info {
+                width: 200px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Resolution selector */
+        .resolution-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .resolution-selector select {
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Selector de rezoluție pentru testare -->
+    <div class="resolution-selector">
+        <label for="resolution">Rezoluție:</label>
+        <select id="resolution">
+            <option value="auto">Auto</option>
+            <option value="mobile">Mobile (480px)</option>
+            <option value="tablet">Tablet (768px)</option>
+            <option value="desktop">Desktop (1200px)</option>
+        </select>
+    </div>
+    
+    <!-- Mingi animate - mai multe și mai intense -->
+    <div class="football" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
+    <div class="football" style="top: 30%; right: 8%; animation-delay: 2s;"></div>
+    <div class="football" style="bottom: 20%; left: 15%; animation-delay: 4s;"></div>
+    <div class="football" style="bottom: 40%; right: 12%; animation-delay: 6s;"></div>
+    <div class="football" style="top: 60%; left: 20%; animation-delay: 8s;"></div>
+    <div class="football" style="top: 80%; right: 25%; animation-delay: 10s;"></div>
+    
+    <!-- Mingi cu efect de bounce -->
+    <div class="football football-bounce" style="top: 15%; right: 10%; animation-delay: 1s;"></div>
+    <div class="football football-bounce" style="bottom: 30%; left: 8%; animation-delay: 2s;"></div>
+
+    <div class="container">
+        <header>
+            <h1>Hobby-ul meu - Fotbal</h1>
+            <p class="subtitle">Pasiune, antrenament și victorie!</p>
+        </header>
+        
+        <div class="content">
+            <section id="despre">
+                <h2>Despre hobby-ul meu</h2>
+                <p><span class="bold">Fotbalul</span> este mai mult decât un simplu sport pentru mine - este o pasiune care mă însoțește de ani de zile. <span class="italic">Îmi place să joc fotbal</span> pentru că această activitate îmi oferă o stare de bine, mă ajută să mențin o condiție fizică optimă și îmi permite să socializez cu prietenii.</p>
+                
+                <p>Programul meu de antrenamente este bine stabilit: <span class="bold highlight">luni, miercuri și vineri</span> sunt zilele dedicate acestui minunat sport. Una dintre cele mai mari realizări ale mele în fotbal a fost când <span class="bold italic">FC Prut Colibași a cucerit atât titlul, cât și Cupa Raională la fotbal în Cahul</span>. Acest succes a fost rezultatul muncii în echipă, a perseverenței și a dedicării noastre.</p>
+            </section>
+            
+            <section id="pasi">
+                <h2>Pașii necesari pentru a începe</h2>
+                <ol>
+                    <li>Alege un club sau o echipă de amatori din zonă</li>
+                    <li>Investește într-o pereche de crampoane și echipament de bază</li>
+                    <li>Începe cu antrenamente ușoare pentru a-ți îmbunătăți condiția fizică</li>
+                    <li>Exersează tehnicile de bază: pasă, control și șut</li>
+                    <li>Participă la meciuri prietenoase pentru a-ți dezvolta experiența</li>
+                    <li>Menține un program constant de antrenamente</li>
+                </ol>
+            </section>
+            
+            <section id="materiale">
+                <h2>Materiale necesare</h2>
+                <ul>
+                    <li>Crampoane pentru fotbal</li>
+                    <li>Mănuși de portar (dacă ești portar)</li>
+                    <li>Echipament sportiv (tricou, pantaloni scurți, șosete)</li>
+                    <li>Pilonți pentru antrenament</li>
+                    <li>Mingi de fotbal</li>
+                    <li>Bandă de protecție pentru glezne (opțional)</li>
+                    <li>Geantă sport</li>
+                </ul>
+            </section>
+            
+            <section id="imagine">
+                <h2>Imagine și hartă interactivă</h2>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Echipă de fotbal" class="football-img">
+                    
+                    <div class="image-map">
+                        <!-- Zona pentru minge -->
+                        <div class="hotspot" style="width: 70px; height: 70px; top: 35%; left: 25%;" 
+                             onmouseover="showInfo('minge-info', event)" onmouseout="hideInfo('minge-info')"
+                             onclick="showPopup('Mingea de fotbal', 'Mingea este elementul esențial al jocului. Fără minge, nu există fotbal!', 'https://images.unsplash.com/photo-1614632537197-38a17061c2bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80')">
+                            M
+                        </div>
+                        
+                        <!-- Zona pentru portar -->
+                        <div class="hotspot" style="width: 80px; height: 80px; top: 55%; left: 60%;" 
+                             onmouseover="showInfo('portar-info', event)" onmouseout="hideInfo('portar-info')"
+                             onclick="showPopup('Portarul', 'Portarul este ultima linie de apărare a echipei. Are rol crucial în apărarea porții și organizarea defensivei.', 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80')">
+                            P
+                        </div>
+                        
+                        <!-- Informații pentru minge -->
+                        <div id="minge-info" class="hotspot-info">
+                            <h3>Mingea de fotbal</h3>
+                            <p>Elementul esențial al jocului. Fără minge, nu există fotbal!</p>
+                        </div>
+                        
+                        <!-- Informații pentru portar -->
+                        <div id="portar-info" class="hotspot-info">
+                            <h3>Portarul</h3>
+                            <p>Ultima linie de apărare a echipei. Rol crucial în apărarea porții.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Popup pentru informații detaliate -->
+                <div id="popup-overlay" class="popup-overlay" onclick="closePopup()">
+                    <div class="popup-content" onclick="event.stopPropagation()">
+                        <img id="popup-img" src="" alt="">
+                        <h3 id="popup-title"></h3>
+                        <p id="popup-text"></p>
+                        <button onclick="closePopup()">Închide</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="echipamente">
+                <h2>Echipamente și prețuri</h2>
+                <table>
+                    <tr>
+                        <th>Nume echipament</th>
+                        <th>Preț (lei)</th>
+                        <th>Utilitate</th>
+                    </tr>
+                    <tr>
+                        <td>Crampoane</td>
+                        <td>150-400</td>
+                        <td>Asigură aderență optimă pe teren</td>
+                    </tr>
+                    <tr>
+                        <td>Mingi de antrenament</td>
+                        <td>50-150</td>
+                        <td>Pentru exersarea tehnicilor</td>
+                    </tr>
+                    <tr>
+                        <td>Echipament complet</td>
+                        <td>200-500</td>
+                        <td>Confort și identificare în echipă</td>
+                    </tr>
+                </table>
+            </section>
+            
+            <section id="video">
+                <h2>Videoclip despre fotbal</h2>
+                <div class="video-container">
+                    <!-- Videoclip YouTube funcțional - am schimbat ID-ul videoclipului -->
+                    <iframe src="https://www.youtube.com/embed/1jQC7J5kX1s" title="Tehnică de fotbal" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </section>
+            
+            <section id="formular">
+                <h2>Vrei să începi acest hobby?</h2>
+                <div class="form-container">
+                    <form id="hobbyForm">
+                        <div class="form-group">
+                            <label for="nume">Nume și prenume:</label>
+                            <input type="text" id="nume" name="nume" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Adresă de email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="experienta">Ce experiență ai cu fotbalul?</label>
+                            <select id="experienta" name="experienta">
+                                <option value="incepator">Începător</option>
+                                <option value="amator">Amator</option>
+                                <option value="avansat">Avansat</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mesaj">Mesaj sau întrebări:</label>
+                            <textarea id="mesaj" name="mesaj" rows="4"></textarea>
+                        </div>
+                        
+                        <button type="submit">Trimite cererea</button>
+                    </form>
+                    
+                    <div id="successMessage" class="success-message">
+                        Mulțumim pentru interes! Te vom contacta în curând cu detalii despre cum poți începe acest hobby.
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>© 2025 Fotbal | Proiect demonstrativ HTML/CSS/JS</p>
+            <img src="data:image/png;base64,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">
+        </footer>
+    </div>
+
+    <script>
+        // Funcții pentru harta interactivă
+        function showInfo(id, event) {
+            const info = document.getElementById(id);
+            info.style.display = 'block';
+            
+            // Poziționarea informației lângă hotspot
+            const rect = event.target.getBoundingClientRect();
+            info.style.top = (rect.top - info.offsetHeight - 10) + 'px';
+            info.style.left = (rect.left - (info.offsetWidth / 2) + (rect.width / 2)) + 'px';
+        }
+        
+        function hideInfo(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        
+        // Funcții pentru popup
+        function showPopup(title, text, imageUrl) {
+            document.getElementById('popup-title').textContent = title;
+            document.getElementById('popup-text').textContent = text;
+            document.getElementById('popup-img').src = imageUrl;
+            document.getElementById('popup-overlay').style.display = 'flex';
+        }
+        
+        function closePopup() {
+            document.getElementById('popup-overlay').style.display = 'none';
+        }
+        
+        // Funcție pentru formular
+        document.getElementById('hobbyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('successMessage').style.display = 'block';
+            this.reset();
+            
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        });
+        
+        // Animație pentru secțiuni la scroll
+        const sections = document.querySelectorAll('section');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Selector de rezoluție pentru testare
+        document.getElementById('resolution').addEventListener('change', function() {
+            const value = this.value;
+            const container = document.querySelector('.container');
+            
+            if (value === 'auto') {
+                container.style.maxWidth = '1200px';
+                container.style.margin = '0 auto';
+            } else if (value === 'mobile') {
+                container.style.maxWidth = '480px';
+                container.style.margin = '0 auto';
+            } else if (value === 'tablet') {
+                container.style.maxWidth = '768px';
+                container.style.margin = '0 auto';
+            } else if (value === 'desktop') {
+                container.style.maxWidth = '1200px';
+                container.style.margin = '0 auto';
+            }
+        });
+        
+        // Adăugăm mingi suplimentare pentru un efect mai dinamic
+        function createFootball() {
+            const football = document.createElement('div');
+            football.className = 'football';
+            football.style.left = Math.random() * 100 + '%';
+            football.style.top = Math.random() * 100 + '%';
+            football.style.animationDelay = Math.random() * 15 + 's';
+            document.body.appendChild(football);
+        }
+        
+        // Creăm mai multe mingi
+        for (let i = 0; i < 5; i++) {
+            createFootball();
+        }
+        
+        // Adăugăm mingi cu efect de bounce
+        function createBounceFootball() {
+            const football = document.createElement('div');
+            football.className = 'football football-bounce';
+            football.style.left = Math.random() * 100 + '%';
+            football.style.top = Math.random() * 100 + '%';
+            football.style.animationDelay = Math.random() * 3 + 's';
+            document.body.appendChild(football);
+        }
+        
+        for (let i = 0; i < 3; i++) {
+            createBounceFootball();
+        }
+    </script>
+</body>
+</html>

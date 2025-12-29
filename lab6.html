@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contor Anul Nou - Cât Mai Rămâne</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b0bec5;
+            margin-bottom: 30px;
+        }
+
+        .current-date {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .current-date h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #ffd700;
+        }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px 20px;
+            min-width: 200px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-unit:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .time-unit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #ffd700, #ff8c00);
+        }
+
+        .time-value {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            font-size: 1.3rem;
+            color: #b0bec5;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .progress-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #ffd700, #ff8c00);
+            border-radius: 15px;
+            width: 0%;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        .progress-text span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .info-card h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .info-card p {
+            color: #b0bec5;
+            line-height: 1.6;
+        }
+
+        .next-year {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin: 40px 0;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .celebrate-btn {
+            background: linear-gradient(to right, #ffd700, #ff8c00);
+            color: #0f2027;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.3);
+        }
+
+        .celebrate-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.4);
+        }
+
+        .celebrate-btn:active {
+            transform: translateY(0);
+        }
+
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        footer {
+            margin-top: 50px;
+            color: #78909c;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .time-unit {
+                min-width: 150px;
+                padding: 20px 15px;
+            }
+            
+            .time-value {
+                font-size: 3.5rem;
+            }
+            
+            .countdown-container {
+                gap: 15px;
+            }
+            
+            .next-year {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .time-unit {
+                min-width: 120px;
+            }
+            
+            .time-value {
+                font-size: 2.8rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fireworks-container" id="fireworks"></div>
+    
+    <div class="container">
+        <header>
+            <h1>🎉 Contor Anul Nou 🎊</h1>
+            <p class="subtitle">Numărătoarea inversă până la începerea anului nou</p>
+        </header>
+        
+        <div class="current-date">
+            <h2 id="current-date-time">Data și ora curentă</h2>
+            <p id="current-day">Ziua săptămânii</p>
+        </div>
+        
+        <div class="next-year" id="next-year-display"></div>
+        
+        <div class="countdown-container">
+            <div class="time-unit">
+                <div class="time-value" id="days">00</div>
+                <div class="time-label">Zile</div>
+            </div>
+            
+            <div class="time-unit">
+                <div class="time-value" id="hours">00</div>
+                <div class="time-label">Ore</div>
+            </div>
+            
+            <div class="time-unit">
+                <div class="time-value" id="minutes">00</div>
+                <div class="time-label">Minute</div>
+            </div>
+            
+            <div class="time-unit">
+                <div class="time-value" id="seconds">00</div>
+                <div class="time-label">Secunde</div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-title">Progresul anului curent</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="year-progress"></div>
+            </div>
+            <div class="progress-text">
+                <span>1 Ianuarie</span>
+                <span id="progress-percentage">0%</span>
+                <span>31 Decembrie</span>
+            </div>
+        </div>
+        
+        <button class="celebrate-btn" onclick="showFireworks()">🎆 Simulează Anul Nou! 🎆</button>
+        
+
+
+    <script>
+        // Elemente DOM
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const currentDateTimeElement = document.getElementById('current-date-time');
+        const currentDayElement = document.getElementById('current-day');
+        const nextYearElement = document.getElementById('next-year-display');
+        const yearProgressElement = document.getElementById('year-progress');
+        const progressPercentageElement = document.getElementById('progress-percentage');
+        const fireworksContainer = document.getElementById('fireworks');
+
+        const daysOfWeek = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
+
+        const months = ['Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie', 
+                       'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'];
+   
+        function formatNumber(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const nextYear = currentYear + 1;
+
+            const newYearDate = new Date(nextYear, 0, 1, 0, 0, 0, 0);
+
+            const timeDifference = newYearDate - now;
+     
+            const totalSeconds = Math.floor(timeDifference / 1000);
+            const totalMinutes = Math.floor(totalSeconds / 60);
+            const totalHours = Math.floor(totalMinutes / 60);
+            const totalDays = Math.floor(totalHours / 24);
+    
+            const days = totalDays;
+            const hours = totalHours % 24;
+            const minutes = totalMinutes % 60;
+            const seconds = totalSeconds % 60;
+                        daysElement.textContent = formatNumber(days);
+            hoursElement.textContent = formatNumber(hours);
+            minutesElement.textContent = formatNumber(minutes);
+            secondsElement.textContent = formatNumber(seconds);
+    
+            const dayOfWeek = daysOfWeek[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const hoursNow = formatNumber(now.getHours());
+            const minutesNow = formatNumber(now.getMinutes());
+            const secondsNow = formatNumber(now.getSeconds());
+            
+            currentDateTimeElement.textContent = `${dayOfWeek}, ${day} ${month} ${year}, ${hoursNow}:${minutesNow}:${secondsNow}`;
+            currentDayElement.textContent = `Ziua ${dayOfWeek.toLowerCase()}`;
+
+            nextYearElement.textContent = `🎊 Anul ${nextYear} 🎊`;
+
+            const startOfYear = new Date(currentYear, 0, 1);
+            const endOfYear = new Date(currentYear + 1, 0, 1);
+            const totalYearTime = endOfYear - startOfYear;
+            const elapsedTime = now - startOfYear;
+            const progressPercentage = (elapsedTime / totalYearTime) * 100;
+                        yearProgressElement.style.width = `${progressPercentage}%`;
+            progressPercentageElement.textContent = `${progressPercentage.toFixed(2)}%`;
+
+            if (seconds % 2 === 0) {
+                secondsElement.style.transform = 'scale(1.1)';
+                secondsElement.style.color = '#ff8c00';
+            } else {
+                secondsElement.style.transform = 'scale(1)';
+                secondsElement.style.color = '#ffd700';
+            }
+  
+            if (timeDifference < 1000) {
+                celebrateNewYear();
+            }
+        }
+
+        function celebrateNewYear() {
+            showFireworks();
+            document.querySelector('h1').textContent = '🎉 LA MULȚI ANI! 🎊';
+            document.querySelector('.subtitle').textContent = 'Anul Nou a început! La mulți ani fericiți!';
+  
+            const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-happy-new-year-horn-575.mp3');
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log("Audio-ul nu poate fi redus automat"));
+        }
+
+        function showFireworks() {
+            fireworksContainer.innerHTML = '';
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    createFirework();
+                }, i * 200);
+            }
+  
+            setTimeout(() => {
+                fireworksContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.style.position = 'absolute';
+            firework.style.width = '5px';
+            firework.style.height = '5px';
+            firework.style.borderRadius = '50%';
+            firework.style.left = `${Math.random() * 100}%`;
+            firework.style.top = `${Math.random() * 100}%`;
+  
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8c00', '#ffd700'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            firework.style.backgroundColor = color;
+            firework.style.boxShadow = `0 0 20px ${color}`;
+            
+            fireworksContainer.appendChild(firework);
+   
+            const animation = firework.animate([
+                { transform: 'scale(1)', opacity: 1 },
+                { transform: 'scale(30)', opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'ease-out'
+            });
+            
+            animation.onfinish = () => {
+                firework.remove();
+            };
+        }
+   
+        function updateNextYearDisplay() {
+            const now = new Date();
+            const nextYear = now.getFullYear() + 1;
+            nextYearElement.textContent = `🎊 Anul ${nextYear} 🎊`;
+        }
+ 
+        updateCountdown();
+        updateNextYearDisplay();
+
+        setInterval(updateCountdown, 1000);
+
+        setInterval(() => {
+            updateNextYearDisplay();
+        }, 60000);
+ 
+        const timeUnits = document.querySelectorAll('.time-unit');
+        timeUnits.forEach(unit => {
+            unit.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.05)';
+            });
+            
+            unit.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
